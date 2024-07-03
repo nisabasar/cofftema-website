@@ -68,12 +68,10 @@ header {
     cursor: pointer;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-
 }
 
 .menu-filter .filter-btn:hover {
     background-color: #06c200;
-
 }
 
 .menu-filter .filter-btn:focus {
@@ -89,7 +87,6 @@ header {
     flex-wrap: wrap;
     gap: 20px;
     flex-direction: column;
-
 }
 
 .menu-item {
@@ -98,7 +95,7 @@ header {
     gap: 20px;
     padding-top: 20px;
     position: relative;
-    align-items: flex-start
+    align-items: flex-start;
 }
 
 .menu-item-img {
@@ -112,7 +109,6 @@ header {
     flex-direction: column;
     justify-content: space-between;
     align-items: baseline;
-
 }
 
 .menu-item-details span {
@@ -233,7 +229,7 @@ footer a {
     transition: transform 0.3s;
 }
 
-.social-media a img:hover {
+social-media a img:hover {
     transform: scale(1.1);
 }
 
@@ -363,7 +359,6 @@ footer a:hover {
     text-align: center;
 }
 
-
 .cart-item .remove-btn {
     background-color: #ff4d4d;
     color: white;
@@ -442,4 +437,78 @@ footer a:hover {
 
 #checkout-btn:hover {
     background-color: #45a049;
+}
+
+
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+    }
+
+    .menu-container {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .menu-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 80%;
+        padding-bottom: 25px;
+    }
+    
+    .menu-items {
+        align-items: center;
+    }
+
+    .menu-item-img,
+    .menu-item-details {
+        flex: none;
+        width: 50%;
+    }
+
+    .menu-item-img img {
+        width: 100%;
+        height: auto;
+    }
+
+    .menu-item-name{
+        text-align: justify;
+    }
+
+    .add-to-cart-btn {
+        width: 80%;
+        margin-top: 20px;
+    }
+
+    .menu-filter .filter-btn {
+        width: 80%;
+        margin: 10px 0;
+    }
+
+    .cart-container {
+        width: 80%;
+    }
+
+    .cart-item img {
+        width: 80px;
+    }
+
+    .address-info {
+        width: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .address-info img {
+        margin-bottom: 10px;
+    }
+
+    .address-info span {
+        font-size: 14px;
+    }
 }
