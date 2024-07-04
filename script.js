@@ -1,14 +1,101 @@
-const cart = [];
+document.addEventListener('DOMContentLoaded', function () {
+    const menuContainer = document.querySelector('.menu-items');
+    const cartContainer = document.querySelector('.cart-list');
+    const totalContainer = document.getElementById('total-price');
+    const cartSidebar = document.querySelector('.cart-container');
+    const closeCartBtn = document.querySelector('.close-cart-btn');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const cartBtn = document.getElementById('cart-btn');
+    const cartCount = document.getElementById('cart-count');
 
-const menuContainer = document.querySelector('.menu-items');
-const cartContainer = document.querySelector('.cart-list');
-const totalContainer = document.getElementById('total-price');
-const cartSidebar = document.querySelector('.cart-container');
-const closeCartBtn = document.querySelector('.close-cart-btn');
-const filterButtons = document.querySelectorAll('.filter-btn');
-const checkoutBtn = document.getElementById('checkout-btn');
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-document.addEventListener('DOMContentLoaded', () => {
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartUI() {
+        cartContainer.innerHTML = '';
+        if (cart.length === 0) {
+            cartContainer.innerHTML = '<p>Sepetiniz boş.</p>';
+        } else {
+            cart.forEach(item => {
+                const cartItem = document.createElement('li');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <div class="cart-item-details">
+                        <span>${item.name}</span>
+                        <span>${item.price} TL</span>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn decrease-btn" data-id="${item.id}">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn increase-btn" data-id="${item.id}">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-btn" data-id="${item.id}">Sil</button>
+                `;
+                cartContainer.appendChild(cartItem);
+
+                const increaseBtn = cartItem.querySelector('.increase-btn');
+                const decreaseBtn = cartItem.querySelector('.decrease-btn');
+                const removeBtn = cartItem.querySelector('.remove-btn');
+
+                increaseBtn.addEventListener('click', () => increaseQuantity(item.id));
+                decreaseBtn.addEventListener('click', () => decreaseQuantity(item.id));
+                removeBtn.addEventListener('click', () => removeFromCart(item.id));
+            });
+        }
+
+        const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        totalContainer.textContent = `${totalPrice}`;
+
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
+
+        if (cart.length > 0) {
+            cartSidebar.classList.add('open');
+        } else {
+            cartSidebar.classList.remove('open');
+        }
+    }
+
+    function addToCart(id, name, price) {
+        const existingItem = cart.find(item => item.id === id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            const item = { id, name, price, quantity: 1 };
+            cart.push(item);
+        }
+        saveCart();
+        updateCartUI();
+    }
+
+    function increaseQuantity(id) {
+        const item = cart.find(item => item.id === id);
+        if (item) {
+            item.quantity += 1;
+            saveCart();
+            updateCartUI();
+        }
+    }
+
+    function decreaseQuantity(id) {
+        const item = cart.find(item => item.id === id);
+        if (item && item.quantity > 1) {
+            item.quantity -= 1;
+            saveCart();
+            updateCartUI();
+        }
+    }
+
+    function removeFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        saveCart();
+        updateCartUI();
+    }
+
     menuContainer.addEventListener('click', event => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const menuItem = event.target.closest('.menu-item');
@@ -32,86 +119,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     checkoutBtn.addEventListener('click', () => {
-        
-        cart.length = 0;
-        renderCart();
-    });
-});
-
-function addToCart(id, name, price) {
-    const existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantity++;
-    } else {
-        cart.push({ id, name, price, quantity: 1 });
-    }
-    renderCart();
-}
-
-function renderCart() {
-    cartContainer.innerHTML = '';
-    cart.forEach(item => {
-        const cartItem = document.createElement('li');
-        cartItem.classList.add('cart-item');
-        cartItem.innerHTML = `
-            <div>
-                <span>${item.name}</span>
-                <span>${item.price} TL</span>
-                <div class="quantity-controls">
-                    <button class="quantity-btn" data-id="${item.id}" data-action="decrease">-</button>
-                    <span>${item.quantity} adet</span>
-                    <button class="quantity-btn" data-id="${item.id}" data-action="increase">+</button>
-                </div>
-            </div>
-            <button class="remove-btn">Sil</button>
-        `;
-        cartItem.querySelector('.remove-btn').addEventListener('click', () => removeFromCart(item.id));
-        cartContainer.appendChild(cartItem);
-    });
-
-    const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    totalContainer.textContent = `${totalPrice}`;
-
-    if (cart.length > 0) {
-        cartSidebar.classList.add('open');
-    } else {
-        cartSidebar.classList.remove('open');
-    }
-
-    const quantityButtons = document.querySelectorAll('.quantity-btn');
-    quantityButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            const id = event.target.dataset.id;
-            const action = event.target.dataset.action;
-            updateQuantity(id, action);
-        });
-    });
-}
-
-function updateQuantity(id, action) {
-    const item = cart.find(item => item.id === id);
-    if (item) {
-        if (action === 'increase') {
-            item.quantity++;
-        } else if (action === 'decrease' && item.quantity > 1) {
-            item.quantity--;
-        }
-    }
-    renderCart();
-}
-
-function removeFromCart(id) {
-    const index = cart.findIndex(item => item.id === id);
-    if (index !== -1) {
-        const item = cart[index];
-        if (item.quantity > 1) {
-            item.quantity--;
+        if (cart.length === 0) {
+            Swal.fire('Sepetiniz boş!', 'Lütfen sepetinize ürün ekleyin.', 'warning');
         } else {
-            cart.splice(index, 1);
+            Swal.fire('Teşekkürler!', 'Satın alma işleminiz başarılı!', 'success');
+            cart = [];
+            saveCart();
+            updateCartUI();
         }
-        renderCart();
-    }
-}
+    });
+
+    cartBtn.addEventListener('click', () => {
+        cartSidebar.classList.toggle('open');
+        if (cartSidebar.classList.contains('open')) {
+            updateCartUI(); 
+            if (cart.length === 0) {
+                Swal.fire('Sepetiniz boş!', '', 'info');
+            }
+        } else {
+
+        }
+    });
+
+
+    updateCartUI();
+});
 
 function filterMenu(category) {
     const menuItems = document.querySelectorAll('.menu-item');
@@ -123,70 +155,3 @@ function filterMenu(category) {
         }
     });
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-    const cartContainer = document.querySelector('.cart-container');
-    const closeCartButton = document.querySelector('.close-cart-btn');
-    const cartList = document.querySelector('.cart-list');
-    const cartButton = document.querySelector('#cart-btn');
-    const cartCount = document.querySelector('#cart-count');
-    const checkoutButton = document.querySelector('#checkout-btn');
-    const totalPriceElement = document.getElementById('total-price');
-  
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  
-    function saveCart() {
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
-  
-    function updateCartUI() {
-      cartList.innerHTML = '';
-      cart.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} - ${item.price} TL`;
-        cartList.appendChild(li);
-      });
-      const totalPrice = cart.reduce((total, item) => total + item.price, 0);
-      totalPriceElement.textContent = totalPrice;
-      cartCount.textContent = cart.length;
-    }
-  
-    function addToCart(name, price) {
-      const item = { name, price };
-      cart.push(item);
-      saveCart();
-      updateCartUI();
-    }
-  
-    addToCartButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        const menuItem = this.closest('.menu-item');
-        const itemName = menuItem.querySelector('.menu-item-name').textContent;
-        const itemPrice = parseInt(menuItem.querySelector('.menu-item-price').textContent.replace(' TL', ''));
-        addToCart(itemName, itemPrice);
-      });
-    });
-  
-    cartButton.addEventListener('click', function () {
-      cartContainer.classList.toggle('open');
-    });
-  
-    closeCartButton.addEventListener('click', function () {
-      cartContainer.classList.remove('open');
-    });
-  
-    checkoutButton.addEventListener('click', function () {
-      if (cart.length === 0) {
-        Swal.fire('Sepetiniz boş!', 'Lütfen sepetinize ürün ekleyin.', 'warning');
-      } else {
-        Swal.fire('Teşekkürler!', 'Satın alma işleminiz başarılı!', 'success');
-        cart = [];
-        saveCart();
-        updateCartUI();
-      }
-    });
-  
-    updateCartUI();
-  });
-  
