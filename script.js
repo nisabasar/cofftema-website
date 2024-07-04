@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     checkoutBtn.addEventListener('click', () => {
-        alert('Satın alma işlemi başarıyla gerçekleşti!');
+        
         cart.length = 0;
         renderCart();
     });
@@ -123,3 +123,70 @@ function filterMenu(category) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+    const cartContainer = document.querySelector('.cart-container');
+    const closeCartButton = document.querySelector('.close-cart-btn');
+    const cartList = document.querySelector('.cart-list');
+    const cartButton = document.querySelector('#cart-btn');
+    const cartCount = document.querySelector('#cart-count');
+    const checkoutButton = document.querySelector('#checkout-btn');
+    const totalPriceElement = document.getElementById('total-price');
+  
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+  
+    function updateCartUI() {
+      cartList.innerHTML = '';
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - ${item.price} TL`;
+        cartList.appendChild(li);
+      });
+      const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+      totalPriceElement.textContent = totalPrice;
+      cartCount.textContent = cart.length;
+    }
+  
+    function addToCart(name, price) {
+      const item = { name, price };
+      cart.push(item);
+      saveCart();
+      updateCartUI();
+    }
+  
+    addToCartButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const menuItem = this.closest('.menu-item');
+        const itemName = menuItem.querySelector('.menu-item-name').textContent;
+        const itemPrice = parseInt(menuItem.querySelector('.menu-item-price').textContent.replace(' TL', ''));
+        addToCart(itemName, itemPrice);
+      });
+    });
+  
+    cartButton.addEventListener('click', function () {
+      cartContainer.classList.toggle('open');
+    });
+  
+    closeCartButton.addEventListener('click', function () {
+      cartContainer.classList.remove('open');
+    });
+  
+    checkoutButton.addEventListener('click', function () {
+      if (cart.length === 0) {
+        Swal.fire('Sepetiniz boş!', 'Lütfen sepetinize ürün ekleyin.', 'warning');
+      } else {
+        Swal.fire('Teşekkürler!', 'Satın alma işleminiz başarılı!', 'success');
+        cart = [];
+        saveCart();
+        updateCartUI();
+      }
+    });
+  
+    updateCartUI();
+  });
+  
