@@ -1,14 +1,25 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    const menuItems = [
+        { id: 1, name: 'Espresso', price: 15, category: 'sicak-icecekler', img: 'images/latte.jpg' },
+        { id: 2, name: 'Americano', price: 20, category: 'sicak-icecekler', img: 'images/latte.jpg' },
+        { id: 3, name: 'Latte', price: 18, category: 'sicak-icecekler', img: 'images/latte.jpg' },
+        { id: 4, name: 'Cappuccino', price: 22, category: 'sicak-icecekler', img: 'images/latte.jpg' },
+        { id: 5, name: 'Mocha', price: 25, category: 'sicak-icecekler', img: 'images/latte.jpg' },
+        { id: 6, name: 'Cheesecake', price: 30, category: 'tatlilar', img: 'images/latte.jpg' },
+        { id: 7, name: 'Turkey Sandwich', price: 28, category: 'tuzlular', img: 'images/latte.jpg' },
+        { id: 8, name: 'Cips', price: 12, category: 'atistirmaliklar', img: 'images/latte.jpg' },
+        { id: 9, name: 'Kahve Çekirdekleri', price: 50, category: 'kahve-cekirdekleri', img: 'images/latte.jpg' },
+    ];
+
     const menuContainer = document.querySelector('.menu-items');
-    const cartContainer = document.querySelector('.cart-list');
-    const totalContainer = document.getElementById('total-price');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cartBtn = document.getElementById('cart-btn');
     const cartSidebar = document.querySelector('.cart-container');
     const closeCartBtn = document.querySelector('.close-cart-btn');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const cartBtn = document.getElementById('cart-btn');
+    const cartContainer = document.querySelector('.cart-list');
+    const totalContainer = document.getElementById('total-price');
     const cartCount = document.getElementById('cart-count');
-
+    const checkoutBtn = document.getElementById('checkout-btn');
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     function saveCart() {
@@ -18,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateCartUI() {
         cartContainer.innerHTML = '';
         if (cart.length === 0) {
-            cartContainer.innerHTML = '<p>Sepetiniz boş.</p>';
+            cartContainer.innerHTML = '';
         } else {
             cart.forEach(item => {
                 const cartItem = document.createElement('li');
@@ -45,6 +56,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 decreaseBtn.addEventListener('click', () => decreaseQuantity(item.id));
                 removeBtn.addEventListener('click', () => removeFromCart(item.id));
             });
+
+            cartSidebar.classList.add('open');
+            cartBtn.classList.add('show');
         }
 
         const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -52,12 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
         cartCount.textContent = totalItems;
-
-        if (cart.length > 0) {
-            cartSidebar.classList.add('open');
-        } else {
-            cartSidebar.classList.remove('open');
-        }
     }
 
     function addToCart(id, name, price) {
@@ -96,10 +104,28 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCartUI();
     }
 
+    menuItems.forEach(menuItem => {
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('menu-item');
+        itemDiv.dataset.id = menuItem.id;
+        itemDiv.dataset.category = menuItem.category;
+        itemDiv.innerHTML = `
+            <div class="menu-item-img">
+                <img src="${menuItem.img}" alt="${menuItem.name}">
+            </div>
+            <div class="menu-item-details">
+                <span class="menu-item-name">${menuItem.name}</span>
+                <span class="menu-item-price">${menuItem.price} TL</span>
+                <button class="add-to-cart-btn">Sepete Ekle</button>
+            </div>
+        `;
+        menuContainer.appendChild(itemDiv);
+    });
+
     menuContainer.addEventListener('click', event => {
         if (event.target.classList.contains('add-to-cart-btn')) {
             const menuItem = event.target.closest('.menu-item');
-            const itemId = menuItem.dataset.id;
+            const itemId = parseInt(menuItem.dataset.id);
             const itemName = menuItem.querySelector('.menu-item-name').textContent;
             const itemPrice = parseFloat(menuItem.querySelector('.menu-item-price').textContent.replace(' TL', ''));
 
@@ -120,9 +146,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     checkoutBtn.addEventListener('click', () => {
         if (cart.length === 0) {
-            Swal.fire('Sepetiniz boş!', 'Lütfen sepetinize ürün ekleyin.', 'warning');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sepetiniz boş!',
+                text: 'Lütfen sepetinize ürün ekleyin.',
+                confirmButtonColor: '#6b4f4f'
+            });
         } else {
-            Swal.fire('Teşekkürler!', 'Satın alma işleminiz başarılı!', 'success');
+            Swal.fire({
+                icon: 'success',
+                title: 'Teşekkürler!',
+                html: '<span class="coffee-icon">☕</span> Satın alma işleminiz başarılı!',
+                confirmButtonColor: '#6b4f4f'
+            });
             cart = [];
             saveCart();
             updateCartUI();
@@ -131,27 +167,57 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cartBtn.addEventListener('click', () => {
         cartSidebar.classList.toggle('open');
-        if (cartSidebar.classList.contains('open')) {
-            updateCartUI(); 
-            if (cart.length === 0) {
-                Swal.fire('Sepetiniz boş!', '', 'info');
-            }
-        } else {
-
-        }
     });
 
+    function filterMenu(category) {
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            if (category === 'all' || item.dataset.category === category) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    const videoElement = document.getElementById('header-video');
+    videoElement.addEventListener('ended', () => {
+        cartBtn.classList.add('show');
+    });
+
+    videoElement.addEventListener('play', () => {
+        cartBtn.classList.remove('show');
+    });
+
+    videoElement.addEventListener('pause', () => {
+        cartBtn.classList.add('show');
+    });
+
+    document.getElementById('search-btn').addEventListener('click', () => {
+        const query = document.getElementById('search-bar').value.toLowerCase();
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            const itemName = item.querySelector('.menu-item-name').textContent.toLowerCase();
+            if (itemName.includes(query)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
 
     updateCartUI();
-});
 
-function filterMenu(category) {
-    const menuItems = document.querySelectorAll('.menu-item');
-    menuItems.forEach(item => {
-        if (category === 'all' || item.dataset.category === category) {
-            item.style.display = 'flex';
+    if (cart.length > 0) {
+        cartBtn.classList.add('show');
+    }
+
+    window.addEventListener('scroll', () => {
+        const headerHeight = document.getElementById('header-video').clientHeight;
+        if (window.scrollY > headerHeight) {
+            cartBtn.classList.add('show');
         } else {
-            item.style.display = 'none';
+            cartBtn.classList.remove('show');
         }
     });
-}
+});
