@@ -1,152 +1,150 @@
 <!DOCTYPE html>
 <html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cofftema</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="images/pngwing.com.png" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="images/pngwing.com.png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </head>
-  <body>
-    <header>
-      <div class="logo-container">
-        <img src="images/pngwing.com.png" alt="Cofftema Logo" />
-        <h2>Cofftema</h2>
-      </div>
-    </header>
-    <div class="content">
-      <div class="menu-container">
-        <h2>Menü</h2>
-        <div class="menu-filter">
-          <button class="filter-btn" data-category="all">Tümü</button>
-          <button class="filter-btn" data-category="kahveler">Kahveler</button>
-          <button class="filter-btn" data-category="tatlılar">Tatlılar</button>
-          <button class="filter-btn" data-category="sandviçler">Sandviçler</button>
+</head>
+<body>
+<header>
+    <video autoplay muted loop id="header-video">
+        <source src="images/coffv.mp4" type="video/mp4">
+        Tarayıcınız video etiketini desteklemiyor.
+    </video>
+    <div class="header-content">
+        <h1>Hoşgeldiniz</h1>
+        <p>Lezzetli içeceklerimiz ve yiyeceklerimizle sizi bekliyoruz!</p>
+        <button class="scroll-down" onclick="scrollToSearch()">Menüye Göz At</button>
+    </div>
+    <div class="scroll-down-icon" onclick="scrollToSearch()">↓</div>
+</header>
+<main class="content">
+    <div class="background-video">
+        <video autoplay muted loop id="background-video">
+            <source src="images/coffv.mp4" type="video/mp4">
+            Tarayıcınız video etiketini desteklemiyor.
+        </video>
+    </div>
+    <div class="search-container-wrapper">
+        <button id="sidebar-btn" class="sidebar-btn">&#9776;</button>
+        <div id="search-container" class="search-container">
+            <input type="text" id="search-bar" placeholder="Arama yap...">
+            <button id="search-btn">&#128269;</button>
         </div>
+    </div>
+    <div class="menu-filter">
+        <button class="filter-btn" data-category="all">Tümü</button>
+        <button class="filter-btn" data-category="sicak-icecekler">Sıcak İçecekler</button>
+        <button class="filter-btn" data-category="soguk-icecekler">Soğuk İçecekler</button>
+        <button class="filter-btn" data-category="alkolsuz-icecekler">Alkolsüz İçecekler</button>
+        <button class="filter-btn" data-category="alkollu-icecekler">Alkollü İçecekler</button>
+        <button class="filter-btn" data-category="tatlilar">Tatlılar</button>
+        <button class="filter-btn" data-category="tuzlular">Tuzlular</button>
+        <button class="filter-btn" data-category="atistirmaliklar">Atıştırmalıklar</button>
+        <button class="filter-btn" data-category="ana-yemekler">Ana Yemekler</button>
+        <button class="filter-btn" data-category="kahvalti">Kahvaltı</button>
+        <button class="filter-btn" data-category="kahve-cekirdekleri">Kahve Çekirdekleri</button>
+        <button class="filter-btn" data-category="kahve-ekipmanlari">Kahve Ekipmanları</button>
+        <button class="filter-btn" data-category="cay-cesitleri">Çay Çeşitleri</button>
+        <button class="filter-btn" data-category="hediyelik-urunler">Hediyelik Ürünler</button>
+    </div>
+    <section class="menu-container" id="menu-section">
         <div class="menu-items">
-          <div class="menu-item" data-id="1" data-category="kahveler">
-            <div class="menu-item-img">
-              <img src="images/americano.jpg" alt="Americano" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Americano</span>
-              <span class="menu-item-price">120 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="2" data-category="kahveler">
-            <div class="menu-item-img">
-              <img src="images/latte.jpg" alt="Latte" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Latte</span>
-              <span class="menu-item-price">140 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="3" data-category="kahveler">
-            <div class="menu-item-img">
-              <img src="images/espresso.jpg" alt="Espresso" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Espresso</span>
-              <span class="menu-item-price">100 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="4" data-category="kahveler">
-            <div class="menu-item-img">
-              <img src="images/cappuccino.jpg" alt="Cappuccino" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Cappuccino</span>
-              <span class="menu-item-price">150 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="5" data-category="kahveler">
-            <div class="menu-item-img">
-              <img src="images/mocha.jpg" alt="Mocha" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Mocha</span>
-              <span class="menu-item-price">160 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="6" data-category="tatlılar">
-            <div class="menu-item-img">
-              <img src="images/tiramisu.jpg" alt="Tiramisu" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Tiramisu</span>
-              <span class="menu-item-price">150 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="7" data-category="sandviçler">
-            <div class="menu-item-img">
-              <img src="images/turkey-sandwich.jpg" alt="Turkey Sandwich" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Turkey Sandwich</span>
-              <span class="menu-item-price">108 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
-          <div class="menu-item" data-id="8" data-category="sandviçler">
-            <div class="menu-item-img">
-              <img src="images/veggie-sandwich.jpg" alt="Veggie Sandwich" />
-            </div>
-            <div class="menu-item-details">
-              <span class="menu-item-name">Veggie Sandwich</span>
-              <span class="menu-item-price">106 TL</span>
-              <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </section>
+</main>
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Hakkımızda <span class="coffee-icon">☕</span></h3>
+            <p>Cofftema, en kaliteli kahve çekirdeklerini ve lezzetli atıştırmalıkları sunar. Sizi keyifli bir kahve deneyimine davet ediyoruz.</p>
+        </div>
+        <div class="footer-section">
+            <h3>İletişim</h3>
+            <p>Email: contact@cofftema.com</p>
+            <p>Telefon: (414) 687 - 5892</p>
+        </div>
+        <div class="footer-section">
+            <h3>Sosyal Medya</h3>
+            <div class="social-media">
+                <a href="#"><img src="images/icons8-facebook-50.png" alt="Facebook"></a>
+                <a href="#"><img src="images/icons8-twitter-50.png" alt="Twitter"></a>
+                <a href="#"><img src="images/icons8-instagram-50.png" alt="Instagram"></a>
+                <a href="#"><img src="images/icons8-linkedin-50.png" alt="LinkedIn"></a>
+                <a href="#"><img src="images/youtube-icon.png" alt="YouTube"></a>
+                <a href="#"><img src="images/whatsapp-icon.png" alt="WhatsApp"></a>
+            </div>
+        </div>
     </div>
-    <footer>
-      <div class="footer-content">
-        <div class="social-media">
-          <a href="#"><img src="images/icons8-facebook-50.png" alt="Facebook" /></a>
-          <a href="#"><img src="images/icons8-twitter-50.png" alt="Twitter" /></a>
-          <a href="#"><img src="images/icons8-instagram-50.png" alt="Instagram" /></a>
-          <a href="#"><img src="images/icons8-linkedin-50.png" alt="LinkedIn" /></a>
-          <a href="#"><img src="images/youtube-icon.png" alt="YouTube" /></a>
-          <a href="#"><img src="images/whatsapp-icon.png" alt="WhatsApp" /></a>
-        </div>
-        <div class="contact-info">
-          <div class="contact-item">
-            <img src="images/icons8-email-50.png" alt="Email Icon" />
-            <span><a href="mailto:contact@cofftema.com">contact@cofftema.com</a></span>
-          </div>
-          <div class="contact-item">
-            <img src="images/icons8-phone-50.png" alt="Phone Icon" />
-            <span>(414) 687 - 5892</span>
-          </div>
-        </div>
-        <div class="address-info">
-          <div class="address-item">
-            <img src="images/icons8-address-50.png" alt="Address Icon" />
-            <h4>Adres: Cofftime, Kocaeli, İzmit</h4>
-          </div>
-        </div>
-      </div>
-      <div class="space"></div>
-    </footer>
-    
-    <div class="cart-container">
-      <button class="close-cart-btn">&times;</button>
-      <h2>Sepetiniz</h2>
-      <ul class="cart-list"></ul>
-      <div class="total">Toplam: <span id="total-price">0</span> TL</div>
-      <button id="checkout-btn">Satın Al</button>
+    <div class="footer-bottom">
+        © 2024 Cofftema. Tüm hakları saklıdır.
     </div>
+    <div class="scroll-up-icon" onclick="scrollToTop()">↑</div>
+</footer>
 
-    <button id="cart-btn" class="cart-btn">🛒<span id="cart-count">0</span></button>
-    <script src="script.js"></script>
-  </body>
+
+<div class="cart-container">
+    <button class="close-cart-btn">&times;</button>
+    <h2>Sepetiniz</h2>
+    <ul class="cart-list"></ul>
+    <div class="cart-summary">
+        <div class="total">Toplam: <span id="total-price">0</span> TL</div>
+        <button id="checkout-btn">Satın Al</button>
+    </div>
+</div>
+<button id="cart-btn" class="cart-btn">🛒<span id="cart-count">0</span></button>
+<div id="sidebar" class="sidebar">
+    <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
+    <h2>Kategoriler</h2>
+    <button class="filter-btn" data-category="all">Tümü</button>
+    <button class="filter-btn" data-category="sicak-icecekler">Sıcak İçecekler</button>
+    <button class="filter-btn" data-category="soguk-icecekler">Soğuk İçecekler</button>
+    <button class="filter-btn" data-category="alkolsuz-icecekler">Alkolsüz İçecekler</button>
+    <button class="filter-btn" data-category="alkollu-icecekler">Alkollü İçecekler</button>
+    <button class="filter-btn" data-category="tatlilar">Tatlılar</button>
+    <button class="filter-btn" data-category="tuzlular">Tuzlular</button>
+    <button class="filter-btn" data-category="atistirmaliklar">Atıştırmalıklar</button>
+    <button class="filter-btn" data-category="ana-yemekler">Ana Yemekler</button>
+    <button class="filter-btn" data-category="kahvalti">Kahvaltı</button>
+    <button class="filter-btn" data-category="kahve-cekirdekleri">Kahve Çekirdekleri</button>
+    <button class="filter-btn" data-category="kahve-ekipmanlari">Kahve Ekipmanları</button>
+    <button class="filter-btn" data-category="cay-cesitleri">Çay Çeşitleri</button>
+    <button class="filter-btn" data-category="hediyelik-urunler">Hediyelik Ürünler</button>
+</div>
+<script src="script.js"></script>
+<script>
+    function scrollToSearch() {
+        window.scrollTo({
+            top: document.querySelector('.search-container-wrapper').offsetTop - 20,
+            behavior: 'smooth'
+        });
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+    }
+
+    document.getElementById('sidebar-btn').addEventListener('click', toggleSidebar);
+
+    window.addEventListener('scroll', () => {
+        const headerHeight = document.getElementById('header-video').clientHeight;
+        const cartBtn = document.getElementById('cart-btn');
+        if (window.scrollY > headerHeight) {
+            cartBtn.classList.add('show');
+        } else {
+            cartBtn.classList.remove('show');
+        }
+    });
+</script>
+</body>
 </html>
